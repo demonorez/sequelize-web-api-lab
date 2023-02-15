@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Champion.init({
     name: DataTypes.STRING,
     role: DataTypes.STRING,
-    region: DataTypes.STRING
+    region: DataTypes.STRING,
+    arcane: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Champion',
