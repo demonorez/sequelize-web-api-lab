@@ -3,27 +3,36 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Champion extends Model {
+  class Item extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Champion.hasMany(models.Item, {
+      Item.belongsTo(models.Champion, {
         foreignKey: 'championId',
-        as: 'items'
       })
     }
   }
-  Champion.init({
+  Item.init({
     name: DataTypes.STRING,
-    role: DataTypes.STRING,
-    region: DataTypes.STRING,
-    arcane: DataTypes.BOOLEAN
+    itemType: {
+      type: DataTypes.ENUM('AD', 'AP', 'Tank'),
+      defaultValue: 'AD'
+    },
+    championId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Champions',
+        key: 'id'
+      }
+    }
   }, {
     sequelize,
-    modelName: 'Champion',
+    modelName: 'Item',
   });
-  return Champion;
+  return Item;
 };

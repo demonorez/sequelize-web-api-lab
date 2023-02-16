@@ -1,4 +1,4 @@
-const { Champion } = require("../models")
+const { Champion, Item } = require("../models")
 
 const create = async(req, res) => {
   try {
@@ -18,7 +18,9 @@ const create = async(req, res) => {
 
 const index = async(req, res) => {
   try{
-    const champions = await Champion.findAll()
+    const champions = await Champion.findAll({
+      include: [{ model: Item, as: "items" }],
+    })
     res.status(200).json(champions)
   } catch (error) {
     res.status(500).json(error)
@@ -46,9 +48,20 @@ const deleteChampion = async(req, res) => {
   }
 }
 
+const addItem = async(req, res) => {
+  try {
+    req.body.championId = req.params.id
+    const item = await Item.create(req.body)
+    res.status(200).json(item)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
+
 module.exports = {
   create, 
   index,
   update,  
-  delete: deleteChampion
+  delete: deleteChampion,
+  addItem
 }
